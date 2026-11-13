@@ -1,0 +1,25 @@
+# Pastas de dependências e ferramentas
+node_modules
+.vscode
+.angular
+.eslintcache
+
+# Artefatos de build e saída (gerados automaticamente)
+build
+dist
+out
+coverage
+
+# Arquivos de Lock (gerados automaticamente - poupa processamento)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+bun.lockb
+
+# Documentação (geralmente não precisa de formatação rígida de código)
+*.md
+
+# Pastas estáticas (caso contenham apenas assets/arquivos de terceiros)
+# styles   <-- Removido! Deixe o Prettier formatar seu CSS/SCSS
+# public   <-- Descomente abaixo apenas se sua pasta public NÃO tiver códigos que você edita
+# public

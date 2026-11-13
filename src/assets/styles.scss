@@ -1,0 +1,203 @@
+/* You can add global styles to this file, and also import other style files */
+@use "primeicons/primeicons.css";
+@use "@/assets/layout/layout.scss";
+@use "@/assets/demo/demo.scss";
+@use "./lucideicons/lucide.css";
+@use "@fontsource/ibm-plex-sans/latin-400.css";
+@use "@fontsource/ibm-plex-sans/latin-500.css";
+@use "@fontsource/ibm-plex-sans/latin-600.css";
+@use "@fontsource/ibm-plex-sans/latin-700.css";
+
+/* ---- Base do app (ui-ux-pro-max): legibilidade, foco e movimento ---- */
+html {
+  font-size: 16px; /* o template usava 14px; no celular o texto base deve ter 16px */
+}
+
+body {
+  font-family: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums; /* valores em R$ alinham os dígitos */
+}
+
+:where(button, a, [role="button"], summary, select) {
+  cursor: pointer;
+}
+
+/* Foco visível para quem navega por teclado (os campos de texto já têm o próprio anel). */
+:where(button, a, [role="button"], summary):focus-visible {
+  outline: 2px solid var(--p-primary-color);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.layout-menu {
+  .layout-menuitem-icon[class^="icon-"],
+  .layout-menuitem-icon[class*=" icon-"] {
+    font-size: 1.25rem !important; /* Força o tamanho correto do glifo */
+    width: 1.25rem; /* Equaliza a largura com o Font Awesome */
+    height: 1.25rem; /* Equaliza a altura */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    text-align: center;
+  }
+}
+
+.meu-swal {
+  z-index: 10000000000;
+}
+
+.modal-wrapper {
+  position: relative;
+  height: 100%;
+}
+
+/* Classe aplicada pelo DialogService.open() quando window.innerWidth <= 767 */
+.p-dialog.modal-fullscreen {
+  max-height: 100vh !important;
+  height: 100vh !important;
+  width: 100vw !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+
+  .p-dialog-content {
+    height: calc(100vh) !important; // Desconta o header do modal
+    border-radius: 0 !important;
+  }
+}
+/* ---- Tema escuro premium (ui-ux-pro-max: Dark Mode OLED + vidro) ----
+   Preto esverdeado, cartões de vidro com borda fina, brilho verde no topo e acento menta.
+   Reaproveita as classes já usadas nas telas (dark:bg-surface-*), então não precisa mexer nos componentes. */
+:root.app-dark {
+  color-scheme: dark;
+  --p-surface-950: #050908;
+  --p-surface-900: #0c1311;
+  --p-surface-800: #141d1a;
+  --p-surface-700: #1d2a25;
+  --p-surface-600: #2b3c35;
+}
+
+/* Fundo da página/login: brilho verde suave no topo e um toque no canto inferior */
+.app-dark .dark\:bg-surface-950 {
+  background-image:
+    radial-gradient(90% 42% at 50% -6%, rgba(16, 185, 129, 0.3), transparent 72%),
+    radial-gradient(70% 28% at 105% 102%, rgba(16, 185, 129, 0.1), transparent 70%);
+}
+
+/* Cartões de vidro */
+.app-dark .dark\:bg-surface-900 {
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.015));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 10px 28px -14px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Acento menta nos botões principais, abas e filtros ativos */
+.app-dark .bg-primary-700 {
+  background-color: #a7f3d0;
+  color: #04251b;
+}
+.app-dark .hover\:bg-primary-800:hover {
+  background-color: #6ee7b7;
+}
+.app-dark .border-primary-700 {
+  border-color: #a7f3d0;
+}
+.app-dark .accent-primary-700 {
+  accent-color: #6ee7b7;
+}
+
+/* Topo da home: gradiente verde no claro; no escuro o saldo flutua sobre o brilho da página */
+.hero-gradient {
+  background: linear-gradient(160deg, var(--p-primary-700), var(--p-primary-900));
+}
+.app-dark .hero-gradient {
+  background: transparent;
+}
+
+/* ---- Movimento (ui-ux-pro-max): 150-300ms, ease-out na entrada, só transform/opacity ---- */
+@keyframes subir {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes crescer {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes surgir {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Entrada escalonada: style="--i: N" atrasa 45ms por item */
+.entrar {
+  animation: subir 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+
+.surgir {
+  animation: surgir 0.22s ease-out both;
+}
+
+/* Barras que "crescem" a partir da esquerda */
+.barra-cresce {
+  transform-origin: left center;
+  animation: crescer 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0.1s;
+}
+
+/* Feedback de toque: o cartão afunda um pouco ao ser pressionado */
+.toque {
+  transition:
+    transform 0.15s ease-out,
+    background-color 0.15s ease-out;
+}
+.toque:active {
+  transform: scale(0.97);
+}
+
+/* Entrada de cada tela: o componente roteado sobe e aparece (sem View Transitions, que travam com a página oculta) */
+main > :not(router-outlet) {
+  animation: subir 0.26s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Tremor ao errar o PIN (usa a propriedade `translate`, sem mexer no transform do elemento) */
+@keyframes tremer {
+  10%, 90% { translate: -2px 0; }
+  20%, 80% { translate: 4px 0; }
+  30%, 50%, 70% { translate: -7px 0; }
+  40%, 60% { translate: 7px 0; }
+}
+.tremer {
+  animation: tremer 0.42s ease-in-out;
+}
