@@ -4,6 +4,7 @@ import { CategoriaIcone } from "./categoria-icone";
 import { CategoriasService } from "./categorias.service";
 import { ICONES_SUGERIDOS, SINONIMOS_PT } from "./category-icons";
 import { LUCIDE_ICONES } from "./lucide-nomes";
+import { LUCIDE_TAGS } from "./lucide-tags";
 import { Categoria, TipoCategoria } from "./models";
 import { PageHeader } from "./page-header";
 
@@ -195,7 +196,9 @@ export class Categorias implements OnInit {
     }
     const porSinonimo = ENTRADAS.filter((e) => e.nomes.some((n) => sinonimos.has(n))).map((e) => e.principal);
     const porNome = ENTRADAS.filter((e) => e.nomes.some((n) => n.includes(q))).map((e) => e.principal);
-    return [...new Set([...porSinonimo, ...porNome])];
+    // Tags oficiais do Lucide (como no site lucide.dev): "lion" acha zodiac-leo.
+    const porTag = q.length >= 3 ? ENTRADAS.filter((e) => (LUCIDE_TAGS[e.principal] ?? "").split("|").some((t) => t.startsWith(q) || t.includes(" " + q))).map((e) => e.principal) : [];
+    return [...new Set([...porSinonimo, ...porNome, ...porTag])];
   });
 
   totalPaginas = computed(() => Math.max(1, Math.ceil(this.resultados().length / POR_PAGINA)));
